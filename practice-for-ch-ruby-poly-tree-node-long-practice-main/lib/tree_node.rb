@@ -1,5 +1,6 @@
 class PolyTreeNode
     attr_reader :value, :parent, :children
+
     def initialize(value)
     @value = value
     @parent = nil
@@ -40,23 +41,33 @@ class PolyTreeNode
     else
       raise 'Node is not a child'
     end
-  end 
+  end
   def dfs(target)
     return self if self.value == target
 
     @children.each do |child|
       dfs_child = child.dfs(target)
       return dfs_child if dfs_child != nil
-    end 
+    end
 
     return nil
-  end 
+  end
 
+  def bfs(target)
+    queue = []
+    queue << self
+    while queue.length > 0
+      head = queue.shift
+      return head if head.value == target
+      head.children.each do |child|
+        queue << child
+      end
+    end
+
+    return nil
+  end
 
   def inspect
     self.value
   end
-
-  attr_reader :parent, :value
-
 end
