@@ -13,10 +13,10 @@ class PolyTreeNode
     end
 
     if @parent != nil && !node.children.include?(self)
-      old_parent = @parent
+      old_parent = self.parent
+      old_parent.remove_child(self)
       @parent = node
       node.children << self
-      old_parent.remove_child(self)
       return self
     end
 
@@ -36,14 +36,27 @@ class PolyTreeNode
   def remove_child(node)
     if @children.include?(node)
       node.parent = nil
-      @children.delete_if(node)
+      @children.delete_if {|element| element == node}
     else
       raise 'Node is not a child'
     end
-  end
+  end 
+  def dfs(target)
+    return self if self.value == target
+
+    @children.each do |child|
+      dfs_child = child.dfs(target)
+      return dfs_child if dfs_child != nil
+    end 
+
+    return nil
+  end 
+
 
   def inspect
     self.value
   end
+
+  attr_reader :parent, :value
 
 end
